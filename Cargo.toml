@@ -1,0 +1,8 @@
+[package]
+name = "epaste"
+version = "1.0.0"
+authors = ["Zetok Zalbavar <zetok@openmailbox.org>"]
+
+[dependencies]
+rustc-serialize = "0.3"
+sodiumoxide = "0.0.10"
