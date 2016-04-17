@@ -55,10 +55,11 @@ by writing code, suggesting improvements, or by donating.
 
 Donate via Bitcoin: `1FSDbXVbUZSe34UqxJjfNMdAA9P8c6tNFQ`
 
-*If you're interested in some other way of donating, please say so. :smile*
+*If you're interested in some other way of donating, please say so. :smile:*
 
 ## License
 
 Licensed under GPLv3+. For details, see [COPYING](/COPYING).
 
 [libsodium]: https://github.com/jedisct1/libsodium
+[Rust]: https://www.rust-lang.org/
