@@ -19,8 +19,8 @@
 
 /*!
     Currently just read stdin to the end, encrypt that with a `Key` derived from
-    a supplied password, base64 concantenated `Nonce`, `Salt` and the payload
-    and print it to stdout.
+    a supplied password, then base64 concantenate `Nonce`, `Salt` and the
+    payload and print it to stdout.
 */
 
 use std::env;
@@ -53,7 +53,7 @@ struct ToDecData {
 const TO_DEC_DATA_BYTES: usize = NONCEBYTES + SALTBYTES;
 
 impl ToDecData {
-    /// Create new `ToDecBytes` with random `Nonce` and `Salt`.
+    /// Create a new `ToDecBytes` with random `Nonce` and `Salt`.
     fn new() -> Self {
         ToDecData {
             nonce: gen_nonce(),
@@ -66,7 +66,7 @@ impl ToDecData {
         &self.nonce
     }
 
-    /// Return its salt.
+    /// Return its `Salt`.
     fn salt(&self) -> &Salt {
         &self.salt
     }
@@ -99,7 +99,7 @@ impl ToDecData {
     }
 }
 
-/// Number of bytes that an encrypted data should have.
+/// Number of bytes that an encrypted data should have at minimum.
 const ENCRYPTED_MIN_SIZE: usize = TO_DEC_DATA_BYTES + MACBYTES;
 
 /**
@@ -141,7 +141,6 @@ fn decrypt(bytes: &[u8], passwd: &str) -> Option<Vec<u8>> {
     let key = Key(keyb);
 
     open(&bytes[TO_DEC_DATA_BYTES..], to_dec_data.nonce(), &key).ok()
-        .and_then(|d| Some(d))
 }
 
 
@@ -194,6 +193,8 @@ To decrypt raw bytes into a file:
     Parse command line args (perhaps opt to use some lib for it, or something).
 
     Returns `None` if number of args doesn't match.
+
+    Returning `None` results in help message being printed.
 */
 fn parse_args() -> Option<Switches> {
     let mut sw = Switches::new();
@@ -206,10 +207,11 @@ fn parse_args() -> Option<Switches> {
                     sw.decrypt = true;
                     sw.raw = true;
                 },
+                "-h" | "--help" => return None,
                 _ => {},
             }
         },
-        _ => return None,
+        _ => return None,  // wrong number of args
     }
 
     Some(sw)
@@ -237,10 +239,9 @@ impl Switches {
 
 
 fn main() {
-    let input = get_bytes();
     if let Some(sw) = parse_args() {
         if sw.decrypt {
-            match input.from_base64() {
+            match get_bytes().from_base64() {
                 Ok(bytes) => {
                     match decrypt(&bytes, &sw.passwd) {
                         None => panic!("Bytes couldn't be decrypted!"),
@@ -258,7 +259,7 @@ fn main() {
                 Err(e) => panic!("Failed to de-base64: {}", e),
             }
         } else {
-            println!("{}", encrypt(&input, &sw.passwd).to_base64(MIME));
+            println!("{}", encrypt(&get_bytes(), &sw.passwd).to_base64(MIME));
         }
     } else {
         help();

@@ -30,10 +30,21 @@ To decrypt data as raw bytes into a file:
 ./epaste -dr 'password' < 'file with encrypted data' > <output file>
 ```
 
+## Packages / builds
+
+### Generic
+
+* [Linux x86_64](https://github.com/zetok/epaste/releases)
+
+### Packages
+
+* [Arch Linux](https://aur.archlinux.org/packages/epaste/)
+
+
 ## Dependencies
 | **Name** | **Version** |
 |----------|-------------|
-| libsodium | 1.0.0 |
+| libsodium | >=1.0.0 |
 
 ## Building
 Fairly simple. You'll need [Rust] and [libsodium].
